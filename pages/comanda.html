@@ -63,6 +63,12 @@
             margin: 4px 0;
         }
 
+        .comanda-address {
+            margin-top: 6px;
+            padding-top: 6px;
+            border-top: 1px dotted #ccc;
+        }
+
         .comanda-items {
             margin-bottom: 12px;
             padding-bottom: 12px;
@@ -219,6 +225,21 @@
 
             const total = `R$ ${orderData.total.toFixed(2).replace(".", ",")}`;
 
+            // Bloco condicional para montar o endereço se for Entrega
+            let addressHTML = "";
+            if (orderData.customerData.orderType === "entrega" && orderData.customerData.address) {
+                const addr = orderData.customerData.address;
+                addressHTML = `
+                    <div class="comanda-address">
+                        <p><strong>Tipo:</strong> ENTREGA</p>
+                        <p><strong>Endereço:</strong> ${addr.logradouro}, Nº ${addr.numero}</p>
+                        ${addr.complemento ? `<p><strong>Compl.:</strong> ${addr.complemento}</p>` : ""}
+                        <p><strong>Bairro:</strong> ${addr.bairro}</p>
+                        <p><strong>CEP / Estado:</strong> ${addr.cep} - ${addr.estado}</p>
+                    </div>
+                `;
+            }
+
             container.innerHTML = `
                 <div class="comanda-header">
                     <h1>MILLA SALGADOS</h1>
@@ -228,7 +249,7 @@
                     <p><strong>Cliente:</strong> ${orderData.customerData.name}</p>
                     ${orderData.customerData.orderType === "mesa" ? `<p><strong>Mesa:</strong> ${orderData.customerData.tableNumber}</p>` : ""}
                     ${orderData.customerData.orderType === "retirada" ? `<p><strong>Retirada:</strong> ${orderData.customerData.name}</p>` : ""}
-                    ${orderData.customerData.orderType === "entrega" ? `<p><strong>Entrega</strong></p>` : ""}
+                    ${addressHTML}
                     <p><strong>Data:</strong> ${orderData.date}</p>
                     <p><strong>Hora:</strong> ${orderData.time}</p>
                 </div>
