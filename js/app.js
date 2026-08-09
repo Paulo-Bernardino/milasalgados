@@ -309,6 +309,35 @@ function openCheckout() {
                     <label>Número da mesa</label>
                     <input type="text" id="table-number" placeholder="Ex: 08" value="${mesa}">
                 </div>
+
+                <!-- Seção de Endereço ViaCEP (Aparece apenas na Entrega) -->
+                <div id="delivery-address-group" style="display:none;">
+                    <div class="form-group">
+                        <label>CEP</label>
+                        <input type="text" id="cep" placeholder="Digite o CEP (Ex: 13457005)" maxlength="9">
+                    </div>
+                    <div class="form-group">
+                        <label>Logradouro (Rua/Avenida)</label>
+                        <input type="text" id="logradouro" placeholder="Rua...">
+                    </div>
+                    <div class="form-group">
+                        <label>Número</label>
+                        <input type="text" id="numero" placeholder="Ex: 123 ou S/N">
+                    </div>
+                    <div class="form-group">
+                        <label>Complemento / Apartamento</label>
+                        <input type="text" id="complemento" placeholder="Ex: Apto 42, Bloco B">
+                    </div>
+                    <div class="form-group">
+                        <label>Bairro</label>
+                        <input type="text" id="bairro" placeholder="Bairro...">
+                    </div>
+                    <div class="form-group">
+                        <label>Estado</label>
+                        <input type="text" id="estado" placeholder="Estado...">
+                    </div>
+                </div>
+
                 <div class="form-group">
                     <label>Forma de pagamento</label>
                     <div class="radio-group">
@@ -332,7 +361,7 @@ function openCheckout() {
                 </div>
                 <div class="form-group">
                     <label>Observação do pedido</label>
-                    <textarea id="order-observation" placeholder="Ex: entregar na mesa 08 / cliente com pressa"></textarea>
+                    <textarea id="order-observation" placeholder="Ex: cliente com pressa"></textarea>
                 </div>
                 <div class="checkout-summary">
                     <h3>Resumo</h3>
@@ -369,8 +398,33 @@ function openCheckout() {
     document.querySelectorAll('input[name="order-type"]').forEach(radio => {
         radio.addEventListener("change", (e) => {
             const mesaGroup = document.getElementById("mesa-group");
+            const deliveryGroup = document.getElementById("delivery-address-group");
+            
             mesaGroup.style.display = e.target.value === "mesa" ? "block" : "none";
+            deliveryGroup.style.display = e.target.value === "entrega" ? "block" : "none";
         });
+    });
+
+    // Evento para buscar CEP na API do ViaCEP
+    document.getElementById("cep")?.addEventListener("blur", (e) => {
+        const cep = e.target.value.replace(/\D/g, '');
+        if (cep.length === 8) {
+            fetch(`https://viacep.com.br/ws/${cep}/json/`)
+                .then(response => response.json())
+                .then(data => {
+                    if (!data.erro) {
+                        document.getElementById("logradouro").value = data.logradouro || "";
+                        document.getElementById("bairro").value = data.bairro || "";
+                        document.getElementById("estado").value = data.estado || "";
+                        document.getElementById("numero").focus();
+                    } else {
+                        showToast("⚠️ CEP não encontrado!");
+                    }
+                })
+                .catch(() => {
+                    showToast("⚠️ Erro ao buscar o CEP!");
+                });
+        }
     });
 
     document.querySelectorAll('input[name="payment"]').forEach(radio => {
@@ -400,6 +454,19 @@ function handleSendOrder() {
     const change = document.getElementById("change-value")?.value || "";
     const observation = document.getElementById("order-observation")?.value.trim() || "";
 
+    // Coleta de dados de endereço se for entrega
+    let addressData = {};
+    if (orderType === "entrega") {
+        addressData = {
+            cep: document.getElementById("cep")?.value.trim() || "",
+            logradouro: document.getElementById("logradouro")?.value.trim() || "",
+            numero: document.getElementById("numero")?.value.trim() || "",
+            complemento: document.getElementById("complemento")?.value.trim() || "",
+            bairro: document.getElementById("bairro")?.value.trim() || "",
+            estado: document.getElementById("estado")?.value.trim() || ""
+        };
+    }
+
     // Validações
     if (!name) {
         showToast("⚠️ Informe seu nome!");
@@ -407,6 +474,10 @@ function handleSendOrder() {
     }
     if (orderType === "mesa" && !tableNumber) {
         showToast("⚠️ Informe o número da mesa!");
+        return;
+    }
+    if (orderType === "entrega" && (!addressData.cep || !addressData.logradouro || !addressData.numero || !addressData.bairro)) {
+        showToast("⚠️ Preencha os campos obrigatórios do endereço (CEP, Rua, Número e Bairro)!");
         return;
     }
     if (!payment) {
@@ -420,7 +491,8 @@ function handleSendOrder() {
         tableNumber,
         payment,
         change,
-        observation
+        observation,
+        address: addressData
     };
 
     const total = getCartTotal();
