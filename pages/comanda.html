@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Comanda - Milla Salgados</title>
+    <link rel="stylesheet" href="../css/print.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Courier New', monospace;
+            background: #f5f5f5;
+            padding: 20px;
+        }
+
+        .comanda-wrapper {
+            max-width: 320px;
+            margin: 0 auto;
+            background: #fff;
+            padding: 20px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            border-radius: 4px;
+        }
+
+        .comanda {
+            width: 100%;
+        }
+
+        .comanda-header {
+            text-align: center;
+            border-bottom: 2px dashed #333;
+            padding-bottom: 12px;
+            margin-bottom: 12px;
+        }
+
+        .comanda-header h1 {
+            font-size: 16px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .comanda-header .order-number {
+            font-size: 20px;
+            font-weight: bold;
+            margin: 8px 0;
+            color: #8B1A1A;
+        }
+
+        .comanda-info {
+            margin-bottom: 12px;
+            padding-bottom: 12px;
+            border-bottom: 1px dashed #999;
+        }
+
+        .comanda-info p {
+            font-size: 12px;
+            margin: 4px 0;
+        }
+
+        .comanda-items {
+            margin-bottom: 12px;
+            padding-bottom: 12px;
+            border-bottom: 1px dashed #999;
+        }
+
+        .comanda-item {
+            margin-bottom: 8px;
+        }
+
+        .comanda-item .item-name {
+            font-weight: bold;
+            font-size: 13px;
+        }
+
+        .comanda-item .item-additions {
+            padding-left: 12px;
+            font-size: 11px;
+            color: #555;
+        }
+
+        .comanda-item .item-obs {
+            padding-left: 12px;
+            font-size: 11px;
+            font-style: italic;
+            text-transform: uppercase;
+            color: #8B1A1A;
+        }
+
+        .comanda-total {
+            text-align: center;
+            font-size: 18px;
+            font-weight: bold;
+            margin: 12px 0;
+            padding: 8px 0;
+            border-top: 2px solid #333;
+            border-bottom: 2px solid #333;
+        }
+
+        .comanda-payment {
+            text-align: center;
+            font-size: 12px;
+            margin: 8px 0;
+        }
+
+        .comanda-obs {
+            font-size: 11px;
+            margin: 8px 0;
+            padding: 8px;
+            border: 1px dashed #999;
+            background: #FFFDF5;
+        }
+
+        .comanda-footer {
+            text-align: center;
+            margin-top: 16px;
+            font-size: 11px;
+            border-top: 2px dashed #333;
+            padding-top: 12px;
+            color: #666;
+        }
+
+        .btn-print {
+            display: block;
+            width: 100%;
+            max-width: 320px;
+            margin: 20px auto;
+            padding: 14px;
+            background: #8B1A1A;
+            color: #fff;
+            border: none;
+            border-radius: 8px;
+            font-family: 'Poppins', sans-serif;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+        }
+
+        .btn-print:hover {
+            background: #6B1010;
+        }
+
+        .no-order {
+            text-align: center;
+            padding: 40px;
+            color: #888;
+        }
+
+        @media print {
+            body {
+                background: #fff;
+                padding: 0;
+            }
+
+            .comanda-wrapper {
+                box-shadow: none;
+                border-radius: 0;
+                padding: 4mm;
+                max-width: none;
+            }
+
+            .btn-print {
+                display: none !important;
+            }
+
+            .comanda-header .order-number {
+                color: #000;
+            }
+
+            .comanda-item .item-obs {
+                color: #000;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="comanda-wrapper">
+        <div class="comanda" id="comanda-content">
+            <div class="no-order" id="no-order">
+                <p>Nenhum pedido encontrado.</p>
+                <p>Faça um pedido pelo cardápio primeiro.</p>
+            </div>
+        </div>
+    </div>
+    <button class="btn-print" id="btn-print" onclick="window.print()">🖨 IMPRIMIR COMANDA</button>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            const orderData = JSON.parse(localStorage.getItem("milla_last_order") || "null");
+
+            if (!orderData) return;
+
+            document.getElementById("no-order").style.display = "none";
+
+            const container = document.getElementById("comanda-content");
+
+            let itemsHTML = orderData.cartItems.map(item => {
+                let html = `<div class="comanda-item">`;
+                html += `<div class="item-name">${item.quantity}x ${item.name.toUpperCase()}</div>`;
+                if (item.additions && item.additions.length > 0) {
+                    html += `<div class="item-additions">`;
+                    item.additions.forEach(add => {
+                        html += `+ ${add.name}<br>`;
+                    });
+                    html += `</div>`;
+                }
+                if (item.observation) {
+                    html += `<div class="item-obs">${item.observation.toUpperCase()}</div>`;
+                }
+                html += `</div>`;
+                return html;
+            }).join("");
+
+            const total = `R$ ${orderData.total.toFixed(2).replace(".", ",")}`;
+
+            container.innerHTML = `
+                <div class="comanda-header">
+                    <h1>MILLA SALGADOS</h1>
+                    <div class="order-number">COMANDA #${orderData.orderNumber}</div>
+                </div>
+                <div class="comanda-info">
+                    <p><strong>Cliente:</strong> ${orderData.customerData.name}</p>
+                    ${orderData.customerData.orderType === "mesa" ? `<p><strong>Mesa:</strong> ${orderData.customerData.tableNumber}</p>` : ""}
+                    ${orderData.customerData.orderType === "retirada" ? `<p><strong>Retirada:</strong> ${orderData.customerData.name}</p>` : ""}
+                    ${orderData.customerData.orderType === "entrega" ? `<p><strong>Entrega</strong></p>` : ""}
+                    <p><strong>Data:</strong> ${orderData.date}</p>
+                    <p><strong>Hora:</strong> ${orderData.time}</p>
+                </div>
+                <div class="comanda-items">
+                    ${itemsHTML}
+                </div>
+                <div class="comanda-total">
+                    TOTAL: ${total}
+                </div>
+                <div class="comanda-payment">
+                    PAGAMENTO: ${orderData.customerData.payment.toUpperCase()}
+                </div>
+                ${orderData.customerData.observation ? `
+                    <div class="comanda-obs">
+                        OBS: ${orderData.customerData.observation.toUpperCase()}
+                    </div>
+                ` : ""}
+                <div class="comanda-footer">
+                    <p>Obrigado pela preferência!</p>
+                    <p>@millasalgados</p>
+                </div>
+            `;
+        });
+    </script>
+</body>
+
+</html>

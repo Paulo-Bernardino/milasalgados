@@ -1,0 +1,37 @@
+{
+  "status": "success",
+  "results": [
+    {
+      "status": "success",
+      "filename": "logo-milla-salgados.png",
+      "url": "https://mgx-backend-cdn.metadl.com/generate/images/1519811/2026-08-08/uczzixaaaj6a/logo-milla-salgados.png",
+      "path": "https://mgx-backend-cdn.metadl.com/generate/images/1519811/2026-08-08/uczzixaaaj6a/logo-milla-salgados.png",
+      "absolute_path": "https://mgx-backend-cdn.metadl.com/generate/images/1519811/2026-08-08/uczzixaaaj6a/logo-milla-salgados.png"
+    },
+    {
+      "status": "success",
+      "filename": "combo-salgados-box.jpg",
+      "url": "https://mgx-backend-cdn.metadl.com/generate/images/1519811/2026-08-08/uczzjdycaj5q/combo-salgados-box.png",
+      "path": "https://mgx-backend-cdn.metadl.com/generate/images/1519811/2026-08-08/uczzjdycaj5q/combo-salgados-box.png",
+      "absolute_path": "https://mgx-backend-cdn.metadl.com/generate/images/1519811/2026-08-08/uczzjdycaj5q/combo-salgados-box.png"
+    },
+    {
+      "status": "success",
+      "filename": "batata-frita-cheddar.jpg",
+      "url": "https://mgx-backend-cdn.metadl.com/generate/images/1519811/2026-08-08/uczzjqqcaj5a/batata-frita-cheddar.png",
+      "path": "https://mgx-backend-cdn.metadl.com/generate/images/1519811/2026-08-08/uczzjqqcaj5a/batata-frita-cheddar.png",
+      "absolute_path": "https://mgx-backend-cdn.metadl.com/generate/images/1519811/2026-08-08/uczzjqqcaj5a/batata-frita-cheddar.png"
+    },
+    {
+      "status": "success",
+      "filename": "mini-churros-chocolate.jpg",
+      "url": "https://mgx-backend-cdn.metadl.com/generate/images/1519811/2026-08-08/uczzj5qcaj4q/mini-churros-chocolate.png",
+      "path": "https://mgx-backend-cdn.metadl.com/generate/images/1519811/2026-08-08/uczzj5qcaj4q/mini-churros-chocolate.png",
+      "absolute_path": "https://mgx-backend-cdn.metadl.com/generate/images/1519811/2026-08-08/uczzj5qcaj4q/mini-churros-chocolate.png"
+    }
+  ],
+  "success_count": 4,
+  "failed_count": 0,
+  "running_count": 0,
+  "message": "Generated 4/4 images total"
+}

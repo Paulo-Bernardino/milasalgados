@@ -1,0 +1,154 @@
+/* ============================================
+   MILLA SALGADOS - Estilos para Impressão Térmica
+   Suporte: 58mm e 80mm
+   ============================================ */
+
+@media print {
+    @page {
+        margin: 0;
+        size: 80mm auto;
+    }
+
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+    }
+
+    body {
+        width: 80mm;
+        margin: 0 auto;
+        font-family: 'Courier New', monospace;
+        font-size: 12px;
+        line-height: 1.4;
+        color: #000;
+        background: #fff;
+    }
+
+    /* Esconder elementos desnecessários */
+    .header,
+    .categories-nav,
+    .main-content,
+    .modal-overlay,
+    .panel-overlay,
+    .toast,
+    .no-print,
+    .btn-print {
+        display: none !important;
+    }
+
+    /* Comanda visível */
+    .comanda {
+        display: block !important;
+        width: 100%;
+        padding: 4mm;
+    }
+
+    .comanda-header {
+        text-align: center;
+        border-bottom: 1px dashed #000;
+        padding-bottom: 3mm;
+        margin-bottom: 3mm;
+    }
+
+    .comanda-header h1 {
+        font-size: 14px;
+        font-weight: bold;
+        text-transform: uppercase;
+    }
+
+    .comanda-header .order-number {
+        font-size: 16px;
+        font-weight: bold;
+        margin: 2mm 0;
+    }
+
+    .comanda-info {
+        margin-bottom: 3mm;
+        padding-bottom: 3mm;
+        border-bottom: 1px dashed #000;
+    }
+
+    .comanda-info p {
+        font-size: 11px;
+        margin: 1mm 0;
+    }
+
+    .comanda-items {
+        margin-bottom: 3mm;
+        padding-bottom: 3mm;
+        border-bottom: 1px dashed #000;
+    }
+
+    .comanda-item {
+        margin-bottom: 2mm;
+    }
+
+    .comanda-item .item-name {
+        font-weight: bold;
+        font-size: 12px;
+    }
+
+    .comanda-item .item-additions {
+        padding-left: 3mm;
+        font-size: 10px;
+    }
+
+    .comanda-item .item-obs {
+        padding-left: 3mm;
+        font-size: 10px;
+        font-style: italic;
+        text-transform: uppercase;
+    }
+
+    .comanda-total {
+        text-align: center;
+        font-size: 14px;
+        font-weight: bold;
+        margin: 3mm 0;
+        padding: 2mm 0;
+        border-top: 2px solid #000;
+        border-bottom: 2px solid #000;
+    }
+
+    .comanda-payment {
+        text-align: center;
+        font-size: 11px;
+        margin: 2mm 0;
+    }
+
+    .comanda-obs {
+        font-size: 10px;
+        margin: 2mm 0;
+        padding: 2mm;
+        border: 1px dashed #000;
+    }
+
+    .comanda-footer {
+        text-align: center;
+        margin-top: 4mm;
+        font-size: 10px;
+        border-top: 1px dashed #000;
+        padding-top: 3mm;
+    }
+}
+
+/* Versão 58mm */
+@media print and (max-width: 58mm) {
+    @page {
+        size: 58mm auto;
+    }
+
+    body {
+        width: 58mm;
+        font-size: 10px;
+    }
+
+    .comanda-header h1 {
+        font-size: 12px;
+    }
+
+    .comanda-total {
+        font-size: 12px;
+    }
+}
